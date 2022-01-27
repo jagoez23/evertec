@@ -5395,6 +5395,34 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
@@ -5408,7 +5436,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       update: true,
       modal: 0,
       titleModal: '',
-      products: []
+      products: [],
+      errores: {},
+      pagination: {
+        page: 1,
+        per_page: 5
+      },
+      pages: []
     };
   },
   methods: {
@@ -5422,19 +5456,44 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context.prev = _context.next) {
               case 0:
                 _context.next = 2;
-                return axios.get('product');
+                return axios.get('product', {
+                  params: _this.pagination
+                });
 
               case 2:
                 res = _context.sent;
                 _this.products = res.data;
 
-              case 4:
+                _this.listPage();
+
+              case 5:
               case "end":
                 return _context.stop();
             }
           }
         }, _callee);
       }))();
+    },
+    listPage: function listPage() {
+      var n = 2;
+      var arrayN = [];
+      var ini = this.pagination.page - 2;
+
+      if (ini < 1) {
+        ini = 1;
+      }
+
+      var fin = this.pagination.page + 2;
+
+      if (fin > this.products.last_page) {
+        fin = this.products.last_page;
+      }
+
+      for (var i = ini; i <= fin; i++) {
+        arrayN.push(i);
+      }
+
+      this.pages = arrayN;
     },
     eliminar: function eliminar(id) {
       var _this2 = this;
@@ -5471,37 +5530,50 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context3.prev = _context3.next) {
               case 0:
+                _context3.prev = 0;
+
                 if (!_this3.update) {
-                  _context3.next = 6;
+                  _context3.next = 7;
                   break;
                 }
 
-                _context3.next = 3;
+                _context3.next = 4;
                 return axios.put('/product/' + _this3.id, _this3.product);
 
-              case 3:
+              case 4:
                 res = _context3.sent;
-                _context3.next = 9;
+                _context3.next = 10;
                 break;
 
-              case 6:
-                _context3.next = 8;
+              case 7:
+                _context3.next = 9;
                 return axios.post('/product/', _this3.product);
 
-              case 8:
+              case 9:
                 _res = _context3.sent;
 
-              case 9:
+              case 10:
                 _this3.closeModal();
 
                 _this3.list();
 
-              case 11:
+                _context3.next = 17;
+                break;
+
+              case 14:
+                _context3.prev = 14;
+                _context3.t0 = _context3["catch"](0);
+
+                if (_context3.t0.response.data) {
+                  _this3.errores = _context3.t0.response.data.errors;
+                }
+
+              case 17:
               case "end":
                 return _context3.stop();
             }
           }
-        }, _callee3);
+        }, _callee3, null, [[0, 14]]);
       }))();
     },
     openModal: function openModal() {
@@ -5526,6 +5598,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     },
     closeModal: function closeModal() {
       this.modal = 0;
+      this.errores = {};
     },
     onUploadImage: function onUploadImage() {
       this.picFile = this.$refs.file.files[0];
@@ -29869,6 +29942,12 @@ var render = function () {
                     },
                   },
                 }),
+                _vm._v(" "),
+                _vm.errores.name
+                  ? _c("span", { staticClass: "text-danger" }, [
+                      _vm._v(_vm._s(_vm.errores.name[0])),
+                    ])
+                  : _vm._e(),
               ]),
               _vm._v(" "),
               _c("div", { staticClass: "my-4" }, [
@@ -29902,6 +29981,12 @@ var render = function () {
                     },
                   },
                 }),
+                _vm._v(" "),
+                _vm.errores.description
+                  ? _c("span", { staticClass: "text-danger" }, [
+                      _vm._v(_vm._s(_vm.errores.description[0])),
+                    ])
+                  : _vm._e(),
               ]),
               _vm._v(" "),
               _c("div", { staticClass: "my-4" }, [
@@ -29933,25 +30018,48 @@ var render = function () {
                     },
                   },
                 }),
+                _vm._v(" "),
+                _vm.errores.price
+                  ? _c("span", { staticClass: "text-danger" }, [
+                      _vm._v(_vm._s(_vm.errores.price[0])),
+                    ])
+                  : _vm._e(),
               ]),
               _vm._v(" "),
               _c("div", { staticClass: "my-4" }, [
                 _c("label", { attrs: { for: "image" } }, [_vm._v("Imagen")]),
                 _vm._v(" "),
                 _c("input", {
-                  ref: "file",
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.product.image,
+                      expression: "product.image",
+                    },
+                  ],
                   staticClass: "form-control",
                   attrs: {
-                    type: "file",
+                    type: "text",
                     placeholder: "Imagen del producto",
                     name: "",
                   },
+                  domProps: { value: _vm.product.image },
                   on: {
-                    change: function ($event) {
-                      return _vm.onUploadImage()
+                    input: function ($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.product, "image", $event.target.value)
                     },
                   },
                 }),
+                _vm._v(" "),
+                _vm.errores.image
+                  ? _c("span", { staticClass: "text-danger" }, [
+                      _vm._v(_vm._s(_vm.errores.image[0])),
+                    ])
+                  : _vm._e(),
               ]),
             ]),
           ]),
@@ -29994,7 +30102,7 @@ var render = function () {
       _vm._v(" "),
       _c(
         "tbody",
-        _vm._l(_vm.products, function (product) {
+        _vm._l(_vm.products.data, function (product) {
           return _c("tr", { key: product.id }, [
             _c("td", [_vm._v(_vm._s(product.name))]),
             _vm._v(" "),
@@ -30038,6 +30146,204 @@ var render = function () {
         }),
         0
       ),
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col-3 md-3 text-aling-right text-primary" }, [
+        _vm._v(
+          "\n            " +
+            _vm._s(_vm.products.from) +
+            " - " +
+            _vm._s(_vm.products.to) +
+            " /total:" +
+            _vm._s(_vm.products.total) +
+            "\n        "
+        ),
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-2 md-2" }, [
+        _c(
+          "select",
+          {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.pagination.per_page,
+                expression: "pagination.per_page",
+              },
+            ],
+            staticClass: "form-select",
+            on: {
+              change: [
+                function ($event) {
+                  var $$selectedVal = Array.prototype.filter
+                    .call($event.target.options, function (o) {
+                      return o.selected
+                    })
+                    .map(function (o) {
+                      var val = "_value" in o ? o._value : o.value
+                      return val
+                    })
+                  _vm.$set(
+                    _vm.pagination,
+                    "per_page",
+                    $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+                  )
+                },
+                function ($event) {
+                  return _vm.list()
+                },
+              ],
+            },
+          },
+          [
+            _c("option", { attrs: { value: "2" } }, [_vm._v("2")]),
+            _vm._v(" "),
+            _c("option", { attrs: { value: "4" } }, [_vm._v("4")]),
+            _vm._v(" "),
+            _c("option", { attrs: { value: "6" } }, [_vm._v("6")]),
+          ]
+        ),
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-7 md-7" }, [
+        _c("nav", [
+          _c(
+            "ul",
+            { staticClass: "pagination" },
+            [
+              _c(
+                "li",
+                {
+                  staticClass: "page-item",
+                  class: { disabled: _vm.pagination.page == 1 },
+                },
+                [
+                  _c(
+                    "a",
+                    {
+                      staticClass: "page-link",
+                      attrs: { href: "#" },
+                      on: {
+                        click: function ($event) {
+                          _vm.pagination.page = 1
+                          _vm.list()
+                        },
+                      },
+                    },
+                    [_vm._v("«")]
+                  ),
+                ]
+              ),
+              _vm._v(" "),
+              _c(
+                "li",
+                {
+                  staticClass: "page-item",
+                  class: { disabled: _vm.pagination.page == 1 },
+                },
+                [
+                  _c(
+                    "a",
+                    {
+                      staticClass: "page-link",
+                      attrs: { href: "#" },
+                      on: {
+                        click: function ($event) {
+                          _vm.pagination.page--
+                          _vm.list()
+                        },
+                      },
+                    },
+                    [_vm._v("<")]
+                  ),
+                ]
+              ),
+              _vm._v(" "),
+              _vm._l(_vm.pages, function (n) {
+                return _c(
+                  "li",
+                  {
+                    key: n,
+                    staticClass: "page-item",
+                    class: { active: _vm.pagination.page == n },
+                  },
+                  [
+                    _c(
+                      "a",
+                      {
+                        staticClass: "page-link",
+                        attrs: { href: "#" },
+                        on: {
+                          click: function ($event) {
+                            _vm.pagination.page = n
+                            _vm.list()
+                          },
+                        },
+                      },
+                      [_vm._v(_vm._s(n))]
+                    ),
+                  ]
+                )
+              }),
+              _vm._v(" "),
+              _c(
+                "li",
+                {
+                  staticClass: "page-item",
+                  class: {
+                    disabled: _vm.pagination.page == _vm.products.last_page,
+                  },
+                },
+                [
+                  _c(
+                    "a",
+                    {
+                      staticClass: "page-link",
+                      attrs: { href: "#" },
+                      on: {
+                        click: function ($event) {
+                          _vm.pagination.page++
+                          _vm.list()
+                        },
+                      },
+                    },
+                    [_vm._v(">")]
+                  ),
+                ]
+              ),
+              _vm._v(" "),
+              _c(
+                "li",
+                {
+                  staticClass: "page-item",
+                  class: {
+                    disabled: _vm.pagination.page == _vm.products.last_page,
+                  },
+                },
+                [
+                  _c(
+                    "a",
+                    {
+                      staticClass: "page-link",
+                      attrs: { href: "#" },
+                      on: {
+                        click: function ($event) {
+                          _vm.pagination.page = _vm.products.last_page
+                          _vm.list()
+                        },
+                      },
+                    },
+                    [_vm._v("»")]
+                  ),
+                ]
+              ),
+            ],
+            2
+          ),
+        ]),
+      ]),
     ]),
   ])
 }

@@ -24,18 +24,22 @@
                 <div class="my-4">
                     <label for="name">Nombre</label>
                     <input v-model="product.name" type="text" class="form-control" id="name" placeholder="Nombre del producto" name=""  >
+                    <span class="text-danger" v-if="errores.name">{{errores.name[0]}}</span>
                 </div>
                 <div class="my-4">
                     <label for="description">Descripión</label>
                     <input v-model="product.description" type="text" class="form-control" id="description" placeholder="Descripción del producto" name=""  >
+                    <span class="text-danger" v-if="errores.description">{{errores.description[0]}}</span>
                 </div>
                 <div class="my-4">
                     <label for="price">Precio</label>
                     <input v-model="product.price" type="text" class="form-control" id="price" placeholder="Precio del producto" name=""  >
+                    <span class="text-danger" v-if="errores.price">{{errores.price[0]}}</span>
                 </div>
                 <div class="my-4">
                     <label for="image">Imagen</label>
-                    <input type="file" class="form-control" ref="file" v-on:change="onUploadImage()" placeholder="Imagen del producto" name=""  >
+                    <input v-model="product.image" type="text" class="form-control" placeholder="Imagen del producto" name=""  >
+                    <span class="text-danger" v-if="errores.image">{{errores.image[0]}}</span>
                 </div>
                 </form>
             </div>
@@ -60,7 +64,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="product in products" :key="product.id">
+                <tr v-for="product in products.data" :key="product.id">
                 <td>{{product.name}}</td>
                 <td>{{product.description}}</td>
                 <td>{{product.price}}</td>
@@ -74,6 +78,30 @@
                 </tr> 
             </tbody>
         </table>
+        <div class="row">
+            <div class="col-3 md-3 text-aling-right text-primary">
+                {{products.from}} - {{products.to}} /total:{{products.total}}
+            </div>
+            <div class="col-2 md-2">
+                <select class="form-select" v-model="pagination.per_page" @change="list();">
+                    <option value="2">2</option>
+                    <option value="4">4</option>
+                    <option value="6">6</option>
+                </select>
+            </div>    
+
+            <div class="col-7 md-7">
+                <nav>
+                    <ul class="pagination">
+                        <li class="page-item" :class="{disabled:pagination.page==1}"><a href="#" class="page-link" @click="pagination.page=1; list()">&laquo;</a></li>
+                        <li class="page-item" :class="{disabled:pagination.page==1}"><a href="#" class="page-link" @click="pagination.page--; list()">&lt;</a></li>
+                        <li class="page-item" v-for="n in pages" :key="n"  :class="{active:pagination.page==n}"><a href="#" class="page-link" @click="pagination.page=n; list()">{{n}}</a></li>
+                        <li class="page-item" :class="{disabled:pagination.page==products.last_page}"><a href="#" class="page-link" @click="pagination.page++; list()">&gt;</a></li>
+                        <li class="page-item" :class="{disabled:pagination.page==products.last_page}"><a href="#" class="page-link" @click="pagination.page=products.last_page; list()">&raquo;</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -92,26 +120,55 @@
                 modal:0,
                 titleModal:'',
                 products:[],
+                errores:{},
+                pagination:{
+                    page:1,
+                    per_page:5,
+                },
+                pages:[],
             };  
         },
         methods: {
          async list() {
-            const res = await axios.get('product');
+            const res = await axios.get('product',{params:this.pagination});
             this.products = res.data;
+            this.listPage();
+          },
+          listPage() {
+              const n = 2
+              let arrayN=[]
+              let ini = this.pagination.page - 2
+              if(ini<1){
+                  ini = 1
+              }
+              let fin = this.pagination.page + 2
+              if(fin>this.products.last_page){
+                 fin=this.products.last_page
+              }
+              for(let i = ini; i <= fin; i++ ) {
+                  arrayN.push(i)
+                }
+                this.pages = arrayN   
           },
           async eliminar(id) {
             const res = await axios.delete('/product/'+id);
             this.list();
           },
           async save() { 
-
-              if(this.update){
+              try {
+                  if(this.update){
                    const res = await axios.put('/product/' +this.id, this.product);
                 }else{
                    const res = await axios.post('/product/', this.product);
                 }
-              this.closeModal();
-              this.list();
+                this.closeModal();
+                this.list();     
+              } catch (error) {
+                  if(error.response.data){
+                      this.errores = error.response.data.errors
+                  }    
+              }
+              
             },
             openModal(data={}){
               this.modal=1;
@@ -133,6 +190,7 @@
             },
             closeModal(){
              this.modal=0;
+             this.errores={};
             },
             onUploadImage() {
                 this.picFile = this.$refs.file.files[0];

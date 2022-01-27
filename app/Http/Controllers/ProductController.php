@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use Illuminate\Http\Request;
+use App\Http\Requests\ProductRequest;
 
 class ProductController extends Controller
 {
@@ -12,9 +13,10 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request  $request)
     {
-        return Product::get();
+        $per_page = $request -> per_page;
+        return Product::paginate($per_page);
     }
 
     /**
@@ -23,15 +25,9 @@ class ProductController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ProductRequest $request)
     {
-        $validatedData=$request->validate([
-            'nombre' => ['required'],
-            'descripcion' => ['required'],
-            'precio' => ['required'],
-            'imagen' => ['required'],
-        ]);
-
+        
         $product = new Product();
         $product -> create($request->all());
     }
@@ -55,7 +51,7 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(ProductRequest $request, $id)
     {
         $product = Product::find($id);
         $product -> update($request->all());
