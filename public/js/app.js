@@ -5423,6 +5423,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
@@ -5437,6 +5442,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       modal: 0,
       titleModal: '',
       products: [],
+      search: '',
       errores: {},
       pagination: {
         page: 1,
@@ -29872,6 +29878,34 @@ var render = function () {
     _c("h1", { staticClass: "text-center" }, [_vm._v("Lista de Productos")]),
     _vm._v(" "),
     _c("hr"),
+    _vm._v(" "),
+    _c("form", { staticClass: "form-inline my-2 my-lg-0" }, [
+      _c("input", {
+        directives: [
+          {
+            name: "model",
+            rawName: "v-model",
+            value: _vm.search,
+            expression: "search",
+          },
+        ],
+        staticClass: "form-control",
+        attrs: {
+          type: "buscar",
+          placeholder: "Buscar por nombre, descripcion...",
+          "aria-label": "Buscar",
+        },
+        domProps: { value: _vm.search },
+        on: {
+          input: function ($event) {
+            if ($event.target.composing) {
+              return
+            }
+            _vm.search = $event.target.value
+          },
+        },
+      }),
+    ]),
     _vm._v(" "),
     _c(
       "button",

@@ -17,6 +17,8 @@ class ProductController extends Controller
     {
         $per_page = $request -> per_page;
         return Product::paginate($per_page);
+
+        
     }
 
     /**

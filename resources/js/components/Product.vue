@@ -3,6 +3,11 @@
         <h1 class="text-center">Lista de Productos</h1>
         <hr/>
 
+        <form class="form-inline my-2 my-lg-0">
+            <input v-model="search" class="form-control" type="buscar" placeholder="Buscar por nombre, descripcion..."
+            aria-label="Buscar">
+        </form>
+
         <!-- Button trigger modal -->
         <button @click="update=false;  openModal();" type="button" class="btn btn-primary my-4">
         Nuevo Producto
@@ -78,6 +83,7 @@
                 </tr> 
             </tbody>
         </table>
+
         <div class="row">
             <div class="col-3 md-3 text-aling-right text-primary">
                 {{products.from}} - {{products.to}} /total:{{products.total}}
@@ -89,7 +95,6 @@
                     <option value="6">6</option>
                 </select>
             </div>    
-
             <div class="col-7 md-7">
                 <nav>
                     <ul class="pagination">
@@ -120,6 +125,7 @@
                 modal:0,
                 titleModal:'',
                 products:[],
+                search:'',
                 errores:{},
                 pagination:{
                     page:1,
@@ -194,7 +200,7 @@
             },
             onUploadImage() {
                 this.picFile = this.$refs.file.files[0];
-            },  
+            },
         },
         created() {
          this.list();
