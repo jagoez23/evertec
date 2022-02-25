@@ -3,8 +3,11 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\ProductController;
+use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\ProductController;
+use App\Http\Controllers\StatusUPController;
+use App\Http\Controllers\ActiveUserController;
+use App\Http\Controllers\MenuController;
 
 
 
@@ -16,7 +19,16 @@ Route::apiResource('/user', UserController::class)->middleware('auth');
 
 Route::apiResource('/product', ProductController::class)->middleware('auth');
 
+
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::get('/menu', [App\Http\Controllers\MenucController::class, 'index'])->name('menu');
+
+Route::post('/statusproduct', [App\Http\Controllers\StatusUPController::class, 'status'])->name('statusproduct');
+
+Route::post('/activeuser', [App\Http\Controllers\ActiveUserController::class, 'active'])->name('activeuser');
+
+
 
 
 
@@ -24,6 +36,14 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 Route::get('/home', function () {
     return view('product');
 })->middleware('auth','verified')->name('home');
+
+Route::get('/product',
+[App\Http\Controllers\ProductController::class, 'index'])->middleware('auth','verified')->name('product');
+
+Route::get('/user', 
+[App\Http\Controllers\UserController::class, 'index'])->middleware('auth','verified')->name('user');
+
+
 
 Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
     $request->fulfill();

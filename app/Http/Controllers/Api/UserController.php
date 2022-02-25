@@ -1,22 +1,21 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
-use App\Models\Product;
+use App\Models\User;
 use Illuminate\Http\Request;
-use App\Http\Requests\ProductRequest;
+use App\Http\Controllers\Controller;
 
-class ProductController extends Controller
+class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request  $request)
+    public function index()
     {
-        $per_page = $request -> per_page;
-        return Product::paginate($per_page);  
+        return User::get();
     }
 
     /**
@@ -25,11 +24,10 @@ class ProductController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(ProductRequest $request)
+    public function store(Request $request)
     {
-        
-        $product = new Product();
-        $product -> create($request->all());
+        $usuario = new User;
+        $usuario -> create($request->all());
     }
 
     /**
@@ -40,8 +38,9 @@ class ProductController extends Controller
      */
     public function show($id)
     {
-        $product = Product::find($id);
-        return $product;
+        $usuario = User::find($id);
+        return $usuario;
+    
     }
 
     /**
@@ -51,10 +50,12 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(ProductRequest $request, $id)
+    public function update(Request $request, $id)
     {
-        $product = Product::find($id);
-        $product -> update($request->all());
+        $usuario = User::find($id);
+        $usuario -> update($request->all());
+
+        /*$request -> update($request->all());*/
     }
 
     /**
@@ -65,7 +66,7 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
-        $product = Product::find($id);
-        $product -> delete();
+        $usuario = User::find($id);
+        $usuario -> delete();
     }
 }

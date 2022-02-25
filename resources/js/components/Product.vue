@@ -3,11 +3,7 @@
         <h1 class="text-center">Lista de Productos</h1>
         <hr/>
 
-        <form class="form-inline my-2 my-lg-0">
-            <input v-model="search" class="form-control" type="buscar" placeholder="Buscar por nombre, descripcion..."
-            aria-label="Buscar">
-        </form>
-
+        
         <!-- Button trigger modal -->
         <button @click="update=false;  openModal();" type="button" class="btn btn-primary my-4">
         Nuevo Producto
@@ -26,26 +22,33 @@
              <!-- Modal body -->
             <div class="modal-body">
                 <form enctype="multipart/form-data">
-                <div class="my-4">
-                    <label for="name">Nombre</label>
-                    <input v-model="product.name" type="text" class="form-control" id="name" placeholder="Nombre del producto" name=""  >
-                    <span class="text-danger" v-if="errores.name">{{errores.name[0]}}</span>
-                </div>
-                <div class="my-4">
-                    <label for="description">Descripión</label>
-                    <input v-model="product.description" type="text" class="form-control" id="description" placeholder="Descripción del producto" name=""  >
-                    <span class="text-danger" v-if="errores.description">{{errores.description[0]}}</span>
-                </div>
-                <div class="my-4">
-                    <label for="price">Precio</label>
-                    <input v-model="product.price" type="text" class="form-control" id="price" placeholder="Precio del producto" name=""  >
-                    <span class="text-danger" v-if="errores.price">{{errores.price[0]}}</span>
-                </div>
-                <div class="my-4">
-                    <label for="image">Imagen</label>
-                    <input v-model="product.image" type="text" class="form-control" placeholder="Imagen del producto" name=""  >
-                    <span class="text-danger" v-if="errores.image">{{errores.image[0]}}</span>
-                </div>
+                    <div class="my-4">
+                        <label for="name">Nombre</label>
+                        <input v-model="product.name" type="text" class="form-control" id="name" placeholder="Nombre del producto" name=""  >
+                        <span class="text-danger" v-if="errores.name">{{errores.name[0]}}</span>
+                    </div>
+                    <div class="my-4">
+                        <label for="description">Descripión</label>
+                        <input v-model="product.description" type="text" class="form-control" id="description" placeholder="Descripción del producto" name=""  >
+                        <span class="text-danger" v-if="errores.description">{{errores.description[0]}}</span>
+                    </div>
+                    <div class="my-4">
+                        <label for="price">Precio</label>
+                        <input v-model="product.price" type="text" class="form-control" id="price" placeholder="Precio del producto" name=""  >
+                        <span class="text-danger" v-if="errores.price">{{errores.price[0]}}</span>
+                    </div>
+                    <div class="my-4">
+                        <label for="image">Imagen</label>
+                        <input v-model="product.image" type="text" class="form-control" placeholder="Imagen del producto" name=""  >
+                        <span class="text-danger" v-if="errores.image">{{errores.image[0]}}</span>
+                    </div>
+                    <div class="my-4" >
+                        <label for="status_product">Estado Producto</label>
+                        <select name="status_product" v-model="product.status_product">
+                            <option value="0">Inactivar</option>
+                            <option value="1">Activar</option>
+                        </select>   
+                    </div>
                 </form>
             </div>
 
@@ -65,7 +68,7 @@
                     <th scope="col">Descripción</th>
                     <th scope="col">Precio</th>
                     <th scope="col">Imagen</th>
-                    <th scope="col" colspan="2" class="text-center">Acción</th>  
+                    <th scope="col" colspan="3" class="text-center">Acción</th>  
                 </tr>
             </thead>
             <tbody>
@@ -80,7 +83,7 @@
                 <td> 
                     <button @click="eliminar(product.id)" class="btn btn-danger">Eliminar</button>
                 </td>
-                </tr> 
+                </tr>  
             </tbody>
         </table>
 
@@ -118,6 +121,7 @@
                  name:'',
                  description:'',
                  price:'',
+                 status_product:'',
                  image:'',
                 },
                 id:0,
@@ -125,7 +129,6 @@
                 modal:0,
                 titleModal:'',
                 products:[],
-                search:'',
                 errores:{},
                 pagination:{
                     page:1,
@@ -184,6 +187,7 @@
                  this.product.name = data.name;
                  this.product.description = data.description;
                  this.product.price = data.price;
+                 this.product.status_product = data.status_product;
                  this.product.image = data.image;
                 }else{
                  this.id = 0;
@@ -191,6 +195,7 @@
                  this.product.name = '';
                  this.product.description = '';
                  this.product.price = '';
+                 this.product.status_product = '';
                  this.product.image = '';
                 }
             },

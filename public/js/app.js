@@ -5428,6 +5428,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
@@ -5435,6 +5438,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         name: '',
         description: '',
         price: '',
+        status_product: '',
         image: ''
       },
       id: 0,
@@ -5442,7 +5446,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       modal: 0,
       titleModal: '',
       products: [],
-      search: '',
       errores: {},
       pagination: {
         page: 1,
@@ -5592,6 +5595,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         this.product.name = data.name;
         this.product.description = data.description;
         this.product.price = data.price;
+        this.product.status_product = data.status_product;
         this.product.image = data.image;
       } else {
         this.id = 0;
@@ -5599,6 +5603,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         this.product.name = '';
         this.product.description = '';
         this.product.price = '';
+        this.product.status_product = '';
         this.product.image = '';
       }
     },
@@ -5701,12 +5706,19 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
       user: {
         nombre: '',
-        correo: ''
+        correo: '',
+        active_user: ''
       },
       id: 0,
       update: true,
@@ -5817,11 +5829,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         this.titleModal = "Modificar Usuario";
         this.user.name = data.name;
         this.user.email = data.email;
+        this.user.active_user = data.active_user;
       } else {
         this.id = 0;
         this.titleModal = "Crear Usuario";
         this.user.name = '';
         this.user.email = '';
+        this.user.active_user = '';
       }
     },
     closeModal: function closeModal() {
@@ -29879,34 +29893,6 @@ var render = function () {
     _vm._v(" "),
     _c("hr"),
     _vm._v(" "),
-    _c("form", { staticClass: "form-inline my-2 my-lg-0" }, [
-      _c("input", {
-        directives: [
-          {
-            name: "model",
-            rawName: "v-model",
-            value: _vm.search,
-            expression: "search",
-          },
-        ],
-        staticClass: "form-control",
-        attrs: {
-          type: "buscar",
-          placeholder: "Buscar por nombre, descripcion...",
-          "aria-label": "Buscar",
-        },
-        domProps: { value: _vm.search },
-        on: {
-          input: function ($event) {
-            if ($event.target.composing) {
-              return
-            }
-            _vm.search = $event.target.value
-          },
-        },
-      }),
-    ]),
-    _vm._v(" "),
     _c(
       "button",
       {
@@ -30094,6 +30080,55 @@ var render = function () {
                       _vm._v(_vm._s(_vm.errores.image[0])),
                     ])
                   : _vm._e(),
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "my-4" }, [
+                _c("label", { attrs: { for: "status_product" } }, [
+                  _vm._v("Estado Producto"),
+                ]),
+                _vm._v(" "),
+                _c(
+                  "select",
+                  {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.product.status_product,
+                        expression: "product.status_product",
+                      },
+                    ],
+                    attrs: { name: "status_product" },
+                    on: {
+                      change: function ($event) {
+                        var $$selectedVal = Array.prototype.filter
+                          .call($event.target.options, function (o) {
+                            return o.selected
+                          })
+                          .map(function (o) {
+                            var val = "_value" in o ? o._value : o.value
+                            return val
+                          })
+                        _vm.$set(
+                          _vm.product,
+                          "status_product",
+                          $event.target.multiple
+                            ? $$selectedVal
+                            : $$selectedVal[0]
+                        )
+                      },
+                    },
+                  },
+                  [
+                    _c("option", { attrs: { value: "0" } }, [
+                      _vm._v("Inactivar"),
+                    ]),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "1" } }, [
+                      _vm._v("Activar"),
+                    ]),
+                  ]
+                ),
               ]),
             ]),
           ]),
@@ -30398,7 +30433,7 @@ var staticRenderFns = [
         _vm._v(" "),
         _c(
           "th",
-          { staticClass: "text-center", attrs: { scope: "col", colspan: "2" } },
+          { staticClass: "text-center", attrs: { scope: "col", colspan: "3" } },
           [_vm._v("Acción")]
         ),
       ]),
@@ -30431,21 +30466,6 @@ var render = function () {
     _c("h1", { staticClass: "text-center" }, [_vm._v("Lista de Usuarios")]),
     _vm._v(" "),
     _c("hr"),
-    _vm._v(" "),
-    _c(
-      "button",
-      {
-        staticClass: "btn btn-primary my-4",
-        attrs: { type: "button" },
-        on: {
-          click: function ($event) {
-            _vm.update = false
-            _vm.openModal()
-          },
-        },
-      },
-      [_vm._v("\n    Nuevo Usuario\n    ")]
-    ),
     _vm._v(" "),
     _c("div", { staticClass: "modal", class: { mostrar: _vm.modal } }, [
       _c("div", { staticClass: "modal-dialog" }, [
@@ -30533,6 +30553,51 @@ var render = function () {
                   },
                 },
               }),
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "my-4" }, [
+              _c("label", { attrs: { for: "active_user" } }, [
+                _vm._v("Estado Usuario"),
+              ]),
+              _vm._v(" "),
+              _c(
+                "select",
+                {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.user.active_user,
+                      expression: "user.active_user",
+                    },
+                  ],
+                  attrs: { name: "active_user" },
+                  on: {
+                    change: function ($event) {
+                      var $$selectedVal = Array.prototype.filter
+                        .call($event.target.options, function (o) {
+                          return o.selected
+                        })
+                        .map(function (o) {
+                          var val = "_value" in o ? o._value : o.value
+                          return val
+                        })
+                      _vm.$set(
+                        _vm.user,
+                        "active_user",
+                        $event.target.multiple
+                          ? $$selectedVal
+                          : $$selectedVal[0]
+                      )
+                    },
+                  },
+                },
+                [
+                  _c("option", { attrs: { value: "0" } }, [_vm._v("Inactivo")]),
+                  _vm._v(" "),
+                  _c("option", { attrs: { value: "1" } }, [_vm._v("Activo")]),
+                ]
+              ),
             ]),
           ]),
           _vm._v(" "),

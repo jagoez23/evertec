@@ -53,8 +53,6 @@ class UserController extends Controller
     {
         $usuario = User::find($id);
         $usuario -> update($request->all());
-
-        /*$request -> update($request->all());*/
     }
 
     /**

@@ -4,9 +4,9 @@
         <hr/>
 
         <!-- Button trigger modal -->
-        <button @click="update=false;  openModal();" type="button" class="btn btn-primary my-4">
+        <!--<button @click="update=false;  openModal();" type="button" class="btn btn-primary my-4">
         Nuevo Usuario
-        </button>
+        </button> -->
 
          <!-- Modal -->
         <div class="modal" :class="{mostrar:modal}">
@@ -27,6 +27,13 @@
                     <label for="email">Correo Electrónico</label>
                     <input v-model="user.email" type="text" class="form-control" id="email" placeholder="Correo Electrónico" name=""  >
                 </div>
+                <div class="my-4">
+                     <label for="active_user">Estado Usuario</label>
+                     <select name="active_user" v-model="user.active_user">
+                            <option value="0">Inactivo</option>
+                            <option value="1">Activo</option>
+                     </select>   
+                </div>
             </div>
              <!-- Modal footer --> 
             <div class="modal-footer">
@@ -36,7 +43,6 @@
             </div>
         </div>
         </div>
-
 
         <table class="table table-striped">
             <thead class="table-dark">
@@ -70,6 +76,7 @@
                 user: {
                     nombre:'',
                     correo:'',
+                    active_user:'',
                 },
                 id:0,
                 update:true,
@@ -104,11 +111,13 @@
                 this.titleModal="Modificar Usuario";
                 this.user.name = data.name;
                 this.user.email = data.email;
+                this.user.active_user = data.active_user;
             }else{
                 this.id = 0;
                 this.titleModal="Crear Usuario";
                 this.user.name = '';
                 this.user.email = '';
+                this.user.active_user = '';
             }
         },
         closeModal(){
